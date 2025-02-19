@@ -20,7 +20,7 @@ export default function ChatArea() {
   }>>([]);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [splitPosition, setSplitPosition] = useState(50); // 百分比
+  const [splitPosition, setSplitPosition] = useState(50); // percentage
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleSendMessage = (message: string, files?: File[]) => {
@@ -45,7 +45,7 @@ export default function ChatArea() {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault(); // 防止默认行为
+    e.preventDefault(); // prevent default behavior
     setIsDragging(true);
     
     const handleMouseMove = (e: MouseEvent) => {
@@ -55,7 +55,7 @@ export default function ChatArea() {
       const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const percentage = (x / rect.width) * 100;
-      const boundedPercentage = Math.min(Math.max(percentage, 20), 80);
+      const boundedPercentage = Math.min(Math.max(percentage, 0), 100);
       setSplitPosition(boundedPercentage);
     };
     
@@ -65,7 +65,7 @@ export default function ChatArea() {
       document.removeEventListener('mouseup', handleMouseUp);
     };
     
-    // 在 document 上添加事件监听
+    // add event listener to document
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
@@ -73,7 +73,7 @@ export default function ChatArea() {
   return (
     <div className="flex flex-col h-full relative" ref={containerRef}>
       <div className="flex-1 flex overflow-hidden">
-        {/* 左侧聊天区域 */}
+        {/* left chat area */}
         <div 
           className="overflow-auto p-4" 
           style={{ width: `${splitPosition}%` }}
@@ -81,13 +81,13 @@ export default function ChatArea() {
           <ChatMessages messages={messages} />
         </div>
 
-        {/* 可拖动分隔线 */}
+        {/* draggable split line */}
         <div
           className="w-1 bg-gray-200 hover:bg-purple-400 cursor-col-resize select-none active:bg-purple-600"
           onMouseDown={handleMouseDown}
         />
 
-        {/* 右侧任务区域 */}
+        {/* right task area */}
         <div 
           className="overflow-auto"
           style={{ width: `${100 - splitPosition}%` }}
